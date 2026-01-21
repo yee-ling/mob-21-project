@@ -97,7 +97,7 @@ class AuthService @Inject constructor() {
         val credentialManager = CredentialManager.create(context)
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId("309538088888-kmgvbnie387s55spmmbpnd30njt9jko6.apps.googleusercontent.com")
+            .setServerClientId("309538088888-94r06kpun1mc3t55seiaen5khd1ta2sa.apps.googleusercontent.com")
             .build()
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
