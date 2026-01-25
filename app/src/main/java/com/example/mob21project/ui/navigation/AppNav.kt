@@ -13,6 +13,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mob21project.core.utils.SnackbarController
+import com.example.mob21project.ui.screens.admin.AdminDashboardScreen
+import com.example.mob21project.ui.screens.admin.create.createActivity.CreateActivityScreen
+import com.example.mob21project.ui.screens.admin.create.createClassDetails.CreateClassDetailsScreen
+import com.example.mob21project.ui.screens.admin.create.createFacilityDetails.CreateFacilityDetailsScreen
+import com.example.mob21project.ui.screens.admin.manage.ManageClassSessionsScreen
+import com.example.mob21project.ui.screens.admin.manage.manageActivity.ManageActivityScreen
 import com.example.mob21project.ui.screens.auth.login.LoginScreen
 import com.example.mob21project.ui.screens.auth.register.RegisterScreen
 import com.example.mob21project.ui.screens.bookings.BookingsScreen
@@ -79,6 +85,30 @@ fun AppNav(
             composable<Screen.FacilityAvailability> {
                 onTitleChange("Facility Availability")
                 FacilityAvailabilityScreen(navController)
+            }
+            composable<Screen.AdminDashboard> {
+                onTitleChange("Admin Dashboard")
+                AdminDashboardScreen(navController)
+            }
+            composable<Screen.CreateActivity> {
+                onTitleChange("Create Activity")
+                CreateActivityScreen(navController)
+            }
+            composable<Screen.CreateClassDetails> {
+                onTitleChange("Create Class Details")
+                CreateClassDetailsScreen(navController)
+            }
+            composable<Screen.CreateFacilityDetails> {
+                onTitleChange("Create Facility Details")
+                CreateFacilityDetailsScreen(navController)
+            }
+            composable<Screen.ManageActivity> {
+                onTitleChange("Manage Activity")
+                ManageActivityScreen(navController)
+            }
+            composable<Screen.ManageClassSessions> {
+                onTitleChange("Class Session")
+                ManageClassSessionsScreen(navController)
             }
         }
         SnackbarHost(
