@@ -28,6 +28,7 @@ import com.example.mob21project.ui.screens.facilityAvailability.FacilityAvailabi
 import com.example.mob21project.ui.screens.facilityDetails.FacilityDetailsScreen
 import com.example.mob21project.ui.screens.home.HomeScreen
 import com.example.mob21project.ui.screens.search.SearchScreen
+import com.example.mob21project.ui.screens.splash.SplashScreen
 
 @Composable
 fun AppNav(
@@ -48,8 +49,12 @@ fun AppNav(
     Box {
         NavHost(
             navController = navController,
-            startDestination = Screen.Login
+            startDestination = Screen.Splash
         ) {
+            composable<Screen.Splash> {
+                onTitleChange("")
+                SplashScreen(navController)
+            }
             composable<Screen.Home> {
                 onTitleChange("Home")
                 HomeScreen(navController)
