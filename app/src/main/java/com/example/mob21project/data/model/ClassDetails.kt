@@ -2,6 +2,7 @@ package com.example.mob21project.data.model
 
 data class ClassDetails(
     val activityId: String = "",
+    val id: String = "",
     val title: String = "",
     val description: String = "",
     val durationMinutes: Double = 0.0,
