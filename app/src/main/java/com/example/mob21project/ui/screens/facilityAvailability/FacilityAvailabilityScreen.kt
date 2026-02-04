@@ -18,18 +18,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.setSelectedDate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,19 +40,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.mob21project.R
 import com.example.mob21project.ui.utils.convertMillisToDate
 import com.example.mob21project.ui.utils.minutesToTimeString
 import com.example.mob21project.ui.utils.minutesToTimeStringTimeGrid
 import com.example.mob21project.ui.utils.startOfDay
+import java.time.LocalDate
+import java.util.concurrent.TimeUnit
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FacilityAvailabilityScreen(
     navController: NavController,
@@ -66,6 +76,7 @@ fun FacilityAvailabilityScreen(
     val selectedDate = datePickerState.selectedDateMillis?.let {
         convertMillisToDate(it)
     } ?: convertMillisToDate(System.currentTimeMillis())
+
 
     LaunchedEffect(Unit) {
         viewModel.getAllBookingsByFacilityId(
@@ -97,10 +108,15 @@ fun FacilityAvailabilityScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(
-                    modifier = Modifier.size(50.dp),
-                    imageVector = Icons.Default.Star,
+                AsyncImage(
+                    model = facilityDetails?.imageUrl ?: "",
                     contentDescription = "",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.ic_imagesmode),
+                    error = painterResource(R.drawable.ic_imagesmode)
                 )
                 Column(
                     modifier = Modifier.weight(1f)
@@ -135,14 +151,22 @@ fun FacilityAvailabilityScreen(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 TextButton(
-                    onClick = {}
+                    onClick = {
+                        datePickerState.setSelectedDate(
+                            LocalDate.now()
+                        )
+                    }
                 ) {
                     Text(
                         "Today"
                     )
                 }
                 TextButton(
-                    onClick = {}
+                    onClick = {
+                        datePickerState.setSelectedDate(
+                            LocalDate.now().plusDays(1)
+                        )
+                    }
                 ) {
                     Text(
                         "Tomorrow"

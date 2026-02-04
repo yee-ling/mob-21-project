@@ -3,6 +3,7 @@ package com.example.mob21project.ui.screens.facilityAvailability
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mob21project.core.utils.LoadingManager
 import com.example.mob21project.core.utils.SnackbarController
 import com.example.mob21project.core.utils.SnackbarEvent
 import com.example.mob21project.data.model.Booking
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.String
 
 @HiltViewModel
@@ -25,7 +27,6 @@ class FacilityAvailabilityViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val authService: AuthService
 ): ViewModel() {
-//    private val id = savedStateHandle.get<String>("id")!!
     private val userId = authService.getCurrentUid()
     private val id: String = savedStateHandle["id"]
         ?: error("Missing facility id")
@@ -41,9 +42,6 @@ class FacilityAvailabilityViewModel @Inject constructor(
     val selectedSlots = _selectedSlots.asStateFlow()
     private var selectionStart: Int? = null
     private var selectionEnd: Int? = null
-//    private val _selectedDate = MutableStateFlow(
-//        startOfDay(System.currentTimeMillis())
-//    )
     private val _bookings = MutableStateFlow<List<Booking>>(emptyList())
     val bookings = _bookings.asStateFlow()
     private val _disabledSlots = MutableStateFlow<Set<Int>>(emptySet())
@@ -53,47 +51,29 @@ class FacilityAvailabilityViewModel @Inject constructor(
         getFacilityDetailsById(id)
     }
 
-//    fun getFacilityDetailsById(id: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            repo.getFacilityDetailsById(id)?.let {
-//                _facilityDetails.value = it
-//
-//                val slots = generateTimeSlots(
-//                    openingTime = it.openingTime.toInt(),
-//                    closingTime = it.closingTime.toInt(),
-//                    intervalMinutes = 60
-//                )
-//                _timeSlots.value = slots
-//            }
-//        }
-//    }
     fun getFacilityDetailsById(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.getFacilityDetailsById(id)?.let {
-                _facilityDetails.value = it
+        viewModelScope.launch {
+            try {
+                LoadingManager.show()
+                val result = withContext(Dispatchers.IO) {
+                    repo.getFacilityDetailsById(id)
+                }
+                result?.let {
+                    _facilityDetails.value = it
 
-                val slots = generateTimeSlots(
-                    openingTime = it.openingTime.toInt(),
-                    closingTime = it.closingTime.toInt(),
-                    intervalMinutes = 30
-                )
-                _timeSlots.value = slots
+                    val slots = generateTimeSlots(
+                        openingTime = it.openingTime.toInt(),
+                        closingTime = it.closingTime.toInt(),
+                        intervalMinutes = 30
+                    )
+                    _timeSlots.value = slots
+                }
+            } finally {
+                LoadingManager.hide()
             }
+
         }
     }
-//    fun generateTimeSlots(
-//        openingTime: Int,
-//        closingTime: Int,
-//        intervalMinutes: Int = 60
-//    ): List<Int> {
-//        val slots = mutableListOf<Int>()
-//        var current = openingTime
-//        while (current + intervalMinutes <= closingTime) {
-//            slots.add(current)
-//            current += intervalMinutes
-//        }
-//        return slots
-//    }
     fun generateTimeSlots(
         openingTime: Int,
         closingTime: Int,
@@ -134,19 +114,6 @@ class FacilityAvailabilityViewModel @Inject constructor(
         _selectedSlots.value = emptyList()
     }
 
-//    fun highlightTimeSlots(
-//        start: Int,
-//        end: Int,
-//        intervalMinutes: Int = 60
-//    ): List<Int> {
-//        val highlightedSlots = mutableListOf<Int>()
-//        var current = start
-//        while (current <= end) {
-//            highlightedSlots.add(current)
-//            current += intervalMinutes
-//        }
-//        return highlightedSlots
-//    }
     fun highlightTimeSlots(
         start: Int,
         end: Int,
@@ -198,10 +165,19 @@ class FacilityAvailabilityViewModel @Inject constructor(
         }
     }
     fun getAllBookingsByFacilityId(date: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val bookings = repo.getFacilityBookingsByFacilityId(id, date)
-            _bookings.value = bookings
-            _disabledSlots.value = disableTimeSlots(bookings)
+        viewModelScope.launch {
+            try {
+                LoadingManager.show()
+
+                val bookings = withContext(Dispatchers.IO) {
+                    repo.getFacilityBookingsByFacilityId(id, date)
+                }
+
+                _bookings.value = bookings
+                _disabledSlots.value = disableTimeSlots(bookings)
+            } finally {
+                LoadingManager.hide()
+            }
         }
     }
     fun disableTimeSlots(bookings: List<Booking>): Set<Int> {

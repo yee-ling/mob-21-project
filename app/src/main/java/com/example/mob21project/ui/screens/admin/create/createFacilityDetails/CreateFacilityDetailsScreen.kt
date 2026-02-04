@@ -49,6 +49,7 @@ fun CreateFacilityDetailsScreen(
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
+    var imageUrl by rememberSaveable { mutableStateOf("") }
 
     // opening time
     var showOpeningTimePicker by remember { mutableStateOf(false) }
@@ -169,6 +170,17 @@ fun CreateFacilityDetailsScreen(
                         )
                     }
                 }
+                Text(
+                    text = "Image Url",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                TextField(
+                    value = imageUrl,
+                    onValueChange = { imageUrl = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Please provide a valid url") }
+                )
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RectangleShape,
@@ -176,7 +188,8 @@ fun CreateFacilityDetailsScreen(
                         title = title,
                         description = description,
                         openingTime = convertTimeToMinutes(openingTimePickerState),
-                        closingTime = convertTimeToMinutes(closingTimePickerState)
+                        closingTime = convertTimeToMinutes(closingTimePickerState),
+                        imageUrl = imageUrl
                     ) }
                 ) {
                     Text("Create Facility Resource")

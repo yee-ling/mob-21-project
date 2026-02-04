@@ -3,6 +3,8 @@ package com.example.mob21project.ui.screens.admin.manage
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mob21project.core.utils.SnackbarController
+import com.example.mob21project.core.utils.SnackbarEvent
 import com.example.mob21project.data.model.ClassDetails
 import com.example.mob21project.data.model.ClassSession
 import com.example.mob21project.data.model.CreateClassSessionFormData
@@ -27,12 +29,15 @@ class ManageClassSessionsViewModel @Inject constructor(
     val classDetails = _classDetails.asStateFlow()
     private val _allClassSessions = MutableStateFlow<List<ClassSession>>(emptyList())
     val allClassSessions = _allClassSessions.asStateFlow()
+    private val _cancelledClassSessions = MutableStateFlow<List<ClassSession>>(emptyList())
+    val cancelledClassSessions = _cancelledClassSessions.asStateFlow()
     private val _success = MutableSharedFlow<Unit>()
     val success = _success.asSharedFlow()
 
     init {
         getClassDetailsById(classId)
-        getAllSessionsByClassId(classId)
+        getAllActiveSessionsByClassId(classId)
+        getAllCancelledSessionsByClassId(classId)
     }
 
     fun getClassDetailsById(id: String) {
@@ -43,9 +48,14 @@ class ManageClassSessionsViewModel @Inject constructor(
             }
         }
     }
-    fun getAllSessionsByClassId(classId: String) {
+    fun getAllActiveSessionsByClassId(classId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _allClassSessions.value = repo.getAllSessionsByClassId(classId)
+            _allClassSessions.value = repo.getActiveSessionsByClassId(classId)
+        }
+    }
+    fun getAllCancelledSessionsByClassId(classId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _cancelledClassSessions.value = repo.getCancelledSessionsByClassId(classId)
         }
     }
     fun addClassSession(formData: CreateClassSessionFormData) {
@@ -64,7 +74,17 @@ class ManageClassSessionsViewModel @Inject constructor(
             _success.emit(Unit)
         }
     }
+    fun cancelClassSession(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.cancelSession(id)
+            SnackbarController.sendEvent(
+                SnackbarEvent("Session cancelled")
+            )
+            refresh()
+        }
+    }
     fun refresh() {
-        getAllSessionsByClassId(classId)
+        getAllActiveSessionsByClassId(classId)
+        getAllCancelledSessionsByClassId(classId)
     }
 }

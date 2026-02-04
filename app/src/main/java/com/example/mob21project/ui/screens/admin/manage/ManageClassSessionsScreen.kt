@@ -11,15 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,12 +28,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.mob21project.ui.screens.admin.dialog.CreateClassSessionDialog
+import coil.compose.AsyncImage
+import com.example.mob21project.R
+import com.example.mob21project.data.model.ClassSession
+import com.example.mob21project.ui.navigation.Screen
+import com.example.mob21project.ui.screens.dialogs.CreateClassSessionDialog
 import com.example.mob21project.ui.utils.convertMillisToDate
 import com.example.mob21project.ui.utils.convertMinutesToTimeString
 
@@ -46,6 +51,7 @@ fun ManageClassSessionsScreen(
 ) {
     val classDetails = viewModel.classDetails.collectAsStateWithLifecycle().value
     val allClassSessions = viewModel.allClassSessions.collectAsStateWithLifecycle().value
+    val cancelledClassSessions = viewModel.cancelledClassSessions.collectAsStateWithLifecycle().value
 
     var showCreateSession by remember { mutableStateOf(false) }
     if (showCreateSession) {
@@ -60,6 +66,7 @@ fun ManageClassSessionsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.success.collect {
+            showCreateSession = false
             viewModel.refresh()
         }
     }
@@ -86,10 +93,15 @@ fun ManageClassSessionsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        modifier = Modifier.size(100.dp),
-                        imageVector = Icons.Default.Star,
+                    AsyncImage(
+                        model = classDetails?.imageUrl ?: "",
                         contentDescription = "",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.ic_imagesmode),
+                        error = painterResource(R.drawable.ic_imagesmode)
                     )
                     Column(
                         modifier = Modifier.weight(1f)
@@ -116,8 +128,10 @@ fun ManageClassSessionsScreen(
                     ) {
                         items(allClassSessions) { classSession ->
                             Card(
-                                modifier = Modifier.fillMaxWidth()
-                                    .clickable {},
+                                modifier = Modifier.width(220.dp)
+                                    .clickable {
+                                        navController.navigate(Screen.ManageBookings(classSession.id))
+                                    },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f)
@@ -136,26 +150,86 @@ fun ManageClassSessionsScreen(
                                         convertMillisToDate(classSession.date)
                                     )
                                     Text(
-                                        convertMinutesToTimeString(classSession.startTime.toLong())
-                                    )
-                                    Text(
-                                        convertMinutesToTimeString(classSession.endTime.toLong())
+                                        "${convertMinutesToTimeString(classSession.startTime.toLong())} - ${convertMinutesToTimeString(classSession.endTime.toLong())}"
                                     )
                                     Text(
                                         classSession.capacity.toString()
                                     )
+                                    Button(
+                                        onClick = { viewModel.cancelClassSession(classSession.id) }
+                                    ) {
+                                        Text("Cancel")
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            CancelledClassSessions(
+                classSessions = cancelledClassSessions
+            )
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RectangleShape,
                 onClick = { showCreateSession = true }
             ) {
                 Text("Create New Session")
+            }
+        }
+    }
+}
+
+@Composable
+fun CancelledClassSessions(
+    classSessions: List<ClassSession>
+) {
+    Text("Cancelled")
+    if (classSessions.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Nothing to display")
+        }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(classSessions) { classSession ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                            .clickable {},
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f)
+                        ),
+                        border = BorderStroke(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                convertMillisToDate(classSession.date)
+                            )
+                            Text(
+                                "${convertMinutesToTimeString(classSession.startTime.toLong())} - ${convertMinutesToTimeString(classSession.endTime.toLong())}"
+
+                            )
+                            Text(
+                                classSession.capacity.toString()
+                            )
+                        }
+                    }
+                }
             }
         }
     }

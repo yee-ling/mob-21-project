@@ -5,6 +5,7 @@ data class ClassDetails(
     val id: String = "",
     val title: String = "",
     val description: String = "",
+    val imageUrl: String? = null,
     val durationMinutes: Double = 0.0,
     val capacity: Int = 0,
     val createdAt: Long = System.currentTimeMillis(),

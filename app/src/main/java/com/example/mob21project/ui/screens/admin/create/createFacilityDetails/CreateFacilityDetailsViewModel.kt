@@ -29,7 +29,8 @@ class CreateFacilityDetailsViewModel @Inject constructor(
         title: String,
         description: String,
         openingTime: Long,
-        closingTime: Long
+        closingTime: Long,
+        imageUrl: String?
     ) {
         val validationMsg = validate(
             title,
@@ -49,7 +50,8 @@ class CreateFacilityDetailsViewModel @Inject constructor(
                 title = title,
                 description = description,
                 openingTime = openingTime,
-                closingTime = closingTime
+                closingTime = closingTime,
+                imageUrl = imageUrl
             )
             repo.addFacilityDetails(facilityDetails)
             _success.emit(Unit)

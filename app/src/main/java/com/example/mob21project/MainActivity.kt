@@ -43,6 +43,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.mob21project.core.utils.FullScreenLoader
 import com.example.mob21project.ui.navigation.AppNav
 import com.example.mob21project.ui.navigation.Screen
 import com.example.mob21project.ui.theme.MOBStarterAppTheme
@@ -97,12 +98,11 @@ fun ComposeApp() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showTopBar = currentDestination?.hierarchy?.any { destination ->
-        items.any { tab -> destination.hasRoute(tab.screen::class) }
-    } == true &&
-            currentDestination.hierarchy.none { destination ->
-                noTopBarScreens.any { destination.hasRoute(it) }
-            }
+    val showTopBar = currentDestination
+        ?.hierarchy
+        ?.none { destination ->
+            noTopBarScreens.any { destination.hasRoute(it) }
+        } == true
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -227,6 +227,7 @@ fun ComposeApp() {
                     navController = navController,
                     onTitleChange = { topBarTitle = it }
                 )
+                FullScreenLoader()
             }
         }
     }

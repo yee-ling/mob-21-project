@@ -11,22 +11,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import com.example.mob21project.R
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.mob21project.ui.navigation.Screen
 
 @Composable
@@ -41,23 +40,6 @@ fun ClassDetailsScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = {Text("Search")},
-            leadingIcon = {
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "",
-                    )
-                }
-            },
-            shape = RoundedCornerShape(16.dp)
-        )
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
@@ -71,17 +53,21 @@ fun ClassDetailsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            modifier = Modifier.size(100.dp),
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "",
-                        )
+                        AsyncImage(
+                        model = classDetails.imageUrl,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.ic_imagesmode),
+                        error = painterResource(R.drawable.ic_imagesmode)
+                            )
                         Column(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(classDetails.title)
                             Text(classDetails.description)
-                            Text(classDetails.capacity.toString())
                         }
                     }
                 }

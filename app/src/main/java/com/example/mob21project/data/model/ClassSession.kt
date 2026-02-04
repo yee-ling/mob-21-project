@@ -11,7 +11,8 @@ data class ClassSession(
     val capacity: Int = 0,
     val status: ClassSessionStatus = ClassSessionStatus.ACTIVE,
     val createdAt: Long = System.currentTimeMillis(),
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    val cancelledAt: Long? = null
 )
 
 enum class ClassSessionStatus {
