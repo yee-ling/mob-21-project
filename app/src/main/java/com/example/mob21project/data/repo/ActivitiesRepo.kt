@@ -35,6 +35,7 @@ interface ActivitiesRepo {
     suspend fun cancelBooking(id: String)
 
     // user
+    suspend fun getAllUsers(): List<User>
     suspend fun getUserById(id: String): User?
     suspend fun addUser(user: User)
     suspend fun getConfirmedBookingsByCurrentUser(userId: String): List<Booking>

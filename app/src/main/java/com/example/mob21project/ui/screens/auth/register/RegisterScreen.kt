@@ -8,13 +8,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -30,6 +39,8 @@ fun RegisterScreen(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
+    var fullName by rememberSaveable { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
         viewModel.success.collect {
             navController.navigate(Screen.Home)
@@ -56,8 +67,17 @@ fun RegisterScreen(
             EmailPassAuth(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 title = "Register",
+                fullNameContent = {
+                    TextField(
+                        value = fullName,
+                        onValueChange = { fullName = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = { Icon(Icons.Default.Person,"") },
+                        placeholder = { Text("Name") }
+                    )
+                },
                 actionButtonText = "Get Started",
-                actionButton = { email, password -> viewModel.signUpWithEmail(email, password) }
+                actionButton = { email, password -> viewModel.signUpWithEmail(email, password, fullName) }
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically

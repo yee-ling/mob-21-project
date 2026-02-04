@@ -34,6 +34,7 @@ fun EmailPassAuth(
     title: String,
     actionButtonText: String,
     actionButton: (String, String) -> Unit,
+    fullNameContent: (@Composable ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
@@ -51,6 +52,7 @@ fun EmailPassAuth(
             fontFamily = FontFamily.Serif,
             color = MaterialTheme.colorScheme.onPrimary
         )
+        fullNameContent?.invoke(this)
         TextField(
             value = email,
             onValueChange = { email = it },

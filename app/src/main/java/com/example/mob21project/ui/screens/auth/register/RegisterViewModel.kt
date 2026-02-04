@@ -24,8 +24,8 @@ class RegisterViewModel @Inject constructor(
     val success = _success.asSharedFlow()
     private val _error = MutableSharedFlow<String>()
     val error = _error.asSharedFlow()
-    fun signUpWithEmail(email: String, password: String) {
-        val validationMsg = validate(email, password)
+    fun signUpWithEmail(email: String, password: String, fullName: String) {
+        val validationMsg = validate(email, password, fullName)
         if (validationMsg != null) {
             viewModelScope.launch {
                 _error.emit(validationMsg)
@@ -41,7 +41,8 @@ class RegisterViewModel @Inject constructor(
                 if(userExist == null) {
                     val newUser = User(
                         id = uid,
-                        email = email
+                        email = email,
+                        fullName = fullName
                     )
                     repo.addUser(newUser)
                 }
@@ -55,10 +56,11 @@ class RegisterViewModel @Inject constructor(
             }
         }
     }
-    fun validate(email: String, password: String): String? {
+    fun validate(email: String, password: String, fullName: String): String? {
         return try {
             require(email.isNotBlank()) { "Email is required" }
             require(password.isNotBlank()) { "Password is required" }
+            require(password.isNotBlank()) { "Name is required" }
             null
         } catch (e: Exception) {
             e.message ?: "Invalid input"

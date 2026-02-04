@@ -189,6 +189,19 @@ class ActivitiesRepoFireImpl: ActivitiesRepo {
     }
 
     // user
+    override suspend fun getAllUsers(): List<User> {
+        return try {
+            val snapshot = usersRef.get().await()
+            snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
+                    ?.copy(id = it.id)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
     override suspend fun getUserById(id: String): User? {
         val snapshot = usersRef.document(id).get().await()
         return snapshot.toObject(User::class.java)?.copy(id = snapshot.id)
