@@ -3,6 +3,7 @@ package com.example.mob21project.ui.screens.bookings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,11 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -28,12 +28,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.mob21project.R
 import com.example.mob21project.ui.utils.convertMillisToDate
 import com.example.mob21project.ui.utils.minutesToTimeString
 
@@ -132,13 +137,28 @@ fun BookingsScreen(
         }
         when(selectedTabIndex) {
             0 -> {
-                BookingDetails(filteredUpcomingBookings)
+                BookingDetails(
+                    bookings = filteredUpcomingBookings
+                ) { bookingId ->
+                    Button(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(
+                                bottom = 16.dp,
+                                start = 16.dp,
+                                end = 16.dp
+                            ),
+                        shape = RectangleShape,
+                        onClick = { viewModel.cancelBooking(bookingId) }
+                    ) {
+                        Text("Cancel Booking")
+                    }
+                }
             }
             1 -> {
-                BookingDetails(filteredCancelledBookings)
+                BookingDetails(filteredCancelledBookings) {}
             }
             2 -> {
-                BookingDetails(filteredHistoryBookings)
+                BookingDetails(filteredHistoryBookings) {}
             }
         }
     }
@@ -146,6 +166,7 @@ fun BookingsScreen(
 @Composable
 fun BookingDetails(
     bookings: List<BookingUiModel>,
+    content: @Composable ColumnScope.(String) -> Unit
 ) {
     if (bookings.isEmpty()) {
         Box(
@@ -167,21 +188,26 @@ fun BookingDetails(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            modifier = Modifier.size(100.dp),
-                            imageVector = Icons.Default.Star,
+                        AsyncImage(
+                            model = item.imageUrl,
                             contentDescription = "",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(R.drawable.ic_imagesmode),
+                            error = painterResource(R.drawable.ic_imagesmode)
                         )
                         Column(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(item.title)
-                            Text(item.description ?: "")
                             Text(convertMillisToDate(booking.date))
                             Text("${minutesToTimeString(booking.startTime)} - ${minutesToTimeString(booking.endTime)} ")
                             Text(booking.status.name)
                         }
                     }
+                    content(booking.id)
                 }
             }
         }

@@ -5,6 +5,7 @@ data class Activity (
     val name: String = "",
     val type: ActivityType = ActivityType.CLASS,
     val status: ActivityStatus = ActivityStatus.ACTIVE,
+    val imageUrl: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

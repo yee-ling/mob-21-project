@@ -19,6 +19,7 @@ import com.example.mob21project.ui.screens.admin.create.createClassDetails.Creat
 import com.example.mob21project.ui.screens.admin.create.createFacilityDetails.CreateFacilityDetailsScreen
 import com.example.mob21project.ui.screens.admin.manage.ManageClassSessionsScreen
 import com.example.mob21project.ui.screens.admin.manage.manageActivity.ManageActivityScreen
+import com.example.mob21project.ui.screens.admin.manage.manageBookings.ManageBookingsScreen
 import com.example.mob21project.ui.screens.admin.manage.manageUsers.ManageUsersScreen
 import com.example.mob21project.ui.screens.auth.login.LoginScreen
 import com.example.mob21project.ui.screens.auth.register.RegisterScreen
@@ -118,6 +119,10 @@ fun AppNav(
             composable<Screen.ManageUsers> {
                 onTitleChange("Users")
                 ManageUsersScreen(navController)
+            }
+            composable<Screen.ManageBookings> {
+                onTitleChange("Manage Bookings")
+                ManageBookingsScreen(navController)
             }
         }
         SnackbarHost(

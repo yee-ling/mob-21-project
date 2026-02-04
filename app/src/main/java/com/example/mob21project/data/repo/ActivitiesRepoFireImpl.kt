@@ -187,7 +187,21 @@ class ActivitiesRepoFireImpl: ActivitiesRepo {
             e.printStackTrace()
         }
     }
-
+    override suspend fun getBookingsForClassSession(sessionId: String): List<Booking> {
+        return try {
+            val snapshot = bookingsRef
+                .whereEqualTo("sessionId", sessionId)
+                .whereEqualTo("status", BookingStatus.CONFIRMED)
+                .get().await()
+            snapshot.documents.mapNotNull {
+                it.toObject(Booking::class.java)
+                    ?.copy(id = it.id)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
     // user
     override suspend fun getAllUsers(): List<User> {
         return try {

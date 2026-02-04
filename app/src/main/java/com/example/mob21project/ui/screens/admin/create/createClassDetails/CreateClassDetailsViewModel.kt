@@ -29,7 +29,8 @@ class CreateClassDetailsViewModel @Inject constructor(
         title: String,
         description: String,
         durationMinutes: Double,
-        capacity: Int
+        capacity: Int,
+        imageUrl: String?
     ) {
         val validationMsg = validate(title,description)
         if(validationMsg != null) {
@@ -46,6 +47,7 @@ class CreateClassDetailsViewModel @Inject constructor(
                  description = description,
                  durationMinutes = durationMinutes,
                  capacity = capacity,
+                imageUrl = imageUrl
             )
             repo.addClassDetails(classDetails)
             _success.emit(Unit)

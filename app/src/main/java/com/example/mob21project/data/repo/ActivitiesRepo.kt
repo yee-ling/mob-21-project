@@ -33,6 +33,7 @@ interface ActivitiesRepo {
     suspend fun getFacilityBookingsByFacilityId(facilityId: String, date: Long): List<Booking>
     suspend fun getClassSessionBookingsBySessionId(sessionId: String, date: Long): List<Booking>
     suspend fun cancelBooking(id: String)
+    suspend fun getBookingsForClassSession(sessionId: String): List<Booking>
 
     // user
     suspend fun getAllUsers(): List<User>

@@ -3,6 +3,8 @@ package com.example.mob21project.ui.screens.bookings
 import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mob21project.core.utils.SnackbarController
+import com.example.mob21project.core.utils.SnackbarEvent
 import com.example.mob21project.data.model.Booking
 import com.example.mob21project.data.repo.ActivitiesRepo
 import com.example.mob21project.service.AuthService
@@ -51,7 +53,8 @@ class BookingsViewModel @Inject constructor(
                                 booking = booking,
                                 title = it.title,
                                 description = it.description,
-                                type = BookingType.FACILITY
+                                type = BookingType.FACILITY,
+                                imageUrl = it.imageUrl
                             )
                         }
                     }
@@ -65,7 +68,8 @@ class BookingsViewModel @Inject constructor(
                                     booking = booking,
                                     title = classDetails.title,
                                     description = classDetails.description,
-                                    type = BookingType.CLASS
+                                    type = BookingType.CLASS,
+                                    imageUrl = classDetails.imageUrl
                                 )
                             }
                         }
@@ -102,7 +106,8 @@ class BookingsViewModel @Inject constructor(
                                 booking = booking,
                                 title = it.title,
                                 description = it.description,
-                                type = BookingType.FACILITY
+                                type = BookingType.FACILITY,
+                                imageUrl = it.imageUrl
                             )
                         }
                     }
@@ -116,7 +121,8 @@ class BookingsViewModel @Inject constructor(
                                     booking = booking,
                                     title = classDetails.title,
                                     description = classDetails.description,
-                                    type = BookingType.CLASS
+                                    type = BookingType.CLASS,
+                                    imageUrl = classDetails.imageUrl
                                 )
                             }
                         }
@@ -127,12 +133,23 @@ class BookingsViewModel @Inject constructor(
             _cancelledBookings.value = uiModels
         }
     }
+    fun cancelBooking(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.cancelBooking(id)
+            SnackbarController.sendEvent(
+                SnackbarEvent("Booking is cancelled")
+            )
+            getConfirmedBookings()
+            getCancelledBookings()
+        }
+    }
 }
 data class BookingUiModel(
     val booking: Booking,
     val title: String,
     val description: String?,
-    val type: BookingType
+    val type: BookingType,
+    val imageUrl: String? = null,
 )
 enum class BookingType {
     CLASS, FACILITY

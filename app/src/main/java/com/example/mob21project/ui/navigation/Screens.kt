@@ -21,4 +21,5 @@ sealed class Screen {
     @Serializable object ManageActivity: Screen()
     @Serializable data class ManageClassSessions(val classId: String): Screen()
     @Serializable object ManageUsers: Screen()
+    @Serializable data class ManageBookings(val sessionId: String): Screen()
 }

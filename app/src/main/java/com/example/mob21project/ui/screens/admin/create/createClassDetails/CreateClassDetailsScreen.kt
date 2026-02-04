@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mob21project.ui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,11 +42,12 @@ fun CreateClassDetailsScreen(
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
+    var imageUrl by rememberSaveable { mutableStateOf("") }
     var durationMinutes by rememberSaveable { mutableStateOf("") }
     var capacity by rememberSaveable { mutableStateOf("") }
     LaunchedEffect(Unit) {
         viewModel.success.collect {
-
+            navController.navigate(Screen.AdminDashboard)
         }
     }
     Box(
@@ -125,6 +127,17 @@ fun CreateClassDetailsScreen(
                         keyboardType = KeyboardType.Number
                     )
                 )
+                Text(
+                    text = "Image Url",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                TextField(
+                    value = imageUrl,
+                    onValueChange = { imageUrl = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Please provide a valid url") }
+                )
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RectangleShape,
@@ -132,7 +145,8 @@ fun CreateClassDetailsScreen(
                         title = title,
                         description = description,
                         durationMinutes = durationMinutes.toDouble(),
-                        capacity = capacity.toInt()
+                        capacity = capacity.toInt(),
+                        imageUrl = imageUrl
                     ) }
                 ) {
                     Text("Create Class")
