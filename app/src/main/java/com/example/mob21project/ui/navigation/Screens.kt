@@ -20,4 +20,5 @@ sealed class Screen {
     @Serializable data class CreateFacilityDetails(val activityId: String): Screen()
     @Serializable object ManageActivity: Screen()
     @Serializable data class ManageClassSessions(val classId: String): Screen()
+    @Serializable object ManageUsers: Screen()
 }

@@ -60,7 +60,7 @@ class RegisterViewModel @Inject constructor(
         return try {
             require(email.isNotBlank()) { "Email is required" }
             require(password.isNotBlank()) { "Password is required" }
-            require(password.isNotBlank()) { "Name is required" }
+            require(fullName.isNotBlank()) { "Name is required" }
             null
         } catch (e: Exception) {
             e.message ?: "Invalid input"
