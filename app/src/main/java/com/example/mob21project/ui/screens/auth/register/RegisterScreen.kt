@@ -1,0 +1,99 @@
+package com.example.mob21project.ui.screens.auth.register
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.mob21project.ui.navigation.Screen
+import com.example.mob21project.ui.screens.auth.composables.EmailPassAuth
+
+@Composable
+fun RegisterScreen(
+    navController: NavController,
+    viewModel: RegisterViewModel = hiltViewModel()
+) {
+    var fullName by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        viewModel.success.collect {
+            navController.navigate(Screen.Home)
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize().background(
+            brush = Brush.linearGradient(
+                0.0f to MaterialTheme.colorScheme.primary,
+                0.7f to MaterialTheme.colorScheme.tertiary,
+            )
+        ),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.Transparent.copy(alpha = 0.35f)
+            ),
+            border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
+        ) {
+            EmailPassAuth(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                title = "Register",
+                fullNameContent = {
+                    TextField(
+                        value = fullName,
+                        onValueChange = { fullName = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = { Icon(Icons.Default.Person,"") },
+                        placeholder = { Text("Name") }
+                    )
+                },
+                actionButtonText = "Get Started",
+                actionButton = { email, password -> viewModel.signUpWithEmail(email, password, fullName) }
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Already have an account?",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    TextButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Text(
+                            "Log In"
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
