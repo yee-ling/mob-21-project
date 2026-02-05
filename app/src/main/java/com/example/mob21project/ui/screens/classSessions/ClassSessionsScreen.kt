@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -94,7 +95,12 @@ fun ClassSessionsScreen(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(classDetails?.title ?: "")
-                    Text(classDetails?.description ?: "")
+                    Text(
+                        classDetails?.description ?: "",
+                        maxLines = 3,
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }

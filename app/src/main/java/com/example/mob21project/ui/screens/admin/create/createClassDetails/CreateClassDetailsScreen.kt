@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -59,97 +60,104 @@ fun CreateClassDetailsScreen(
         ),
         contentAlignment = Alignment.Center
     ) {
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.Transparent.copy(alpha = 0.35f)
-            ),
-            border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    text = "Title",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("e.g., Yoga with ...") }
-                )
-                Text(
-                    text = "Description",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("e.g., Description ...") }
-                )
-                Text(
-                    text = "Class Duration (minutes)",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = durationMinutes,
-                    onValueChange = {
-                        if (it.all { it.isDigit() } || it.isEmpty()) {
-                            durationMinutes = it
-                        } },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("e.g., 60") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-                Text(
-                    text = "Class Capacity (pax)",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = capacity,
-                    onValueChange = {
-                        if (it.all { it.isDigit() } || it.isEmpty()) {
-                            capacity = it
-                        } },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("e.g., 15") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-                Text(
-                    text = "Image Url",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = imageUrl,
-                    onValueChange = { imageUrl = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Please provide a valid url") }
-                )
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RectangleShape,
-                    onClick = { viewModel.createClassDetails(
-                        title = title,
-                        description = description,
-                        durationMinutes = durationMinutes.toDouble(),
-                        capacity = capacity.toInt(),
-                        imageUrl = imageUrl
-                    ) }
+        LazyColumn {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Transparent.copy(alpha = 0.35f)
+                    ),
+                    border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
                 ) {
-                    Text("Create Class")
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = "Title",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            maxLines = 1
+                        )
+                        TextField(
+                            value = title,
+                            onValueChange = { title = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("e.g., Yoga with ...") }
+                        )
+                        Text(
+                            text = "Description",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        TextField(
+                            value = description,
+                            onValueChange = { description = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("e.g., Description ...") },
+                            maxLines = 3
+                        )
+                        Text(
+                            text = "Class Duration (minutes)",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        TextField(
+                            value = durationMinutes,
+                            onValueChange = {
+                                if (it.all { it.isDigit() } || it.isEmpty()) {
+                                    durationMinutes = it
+                                } },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("e.g., 60") },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
+                        Text(
+                            text = "Class Capacity (pax)",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        TextField(
+                            value = capacity,
+                            onValueChange = {
+                                if (it.all { it.isDigit() } || it.isEmpty()) {
+                                    capacity = it
+                                } },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("e.g., 15") },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
+                        Text(
+                            text = "Image Url",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        TextField(
+                            value = imageUrl,
+                            onValueChange = { imageUrl = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("Please provide a valid url") },
+                            maxLines = 3
+                        )
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RectangleShape,
+                            onClick = { viewModel.createClassDetails(
+                                title = title,
+                                description = description,
+                                durationMinutes = durationMinutes.toDouble(),
+                                capacity = capacity.toInt(),
+                                imageUrl = imageUrl
+                            ) }
+                        ) {
+                            Text("Create Class")
+                        }
+                    }
                 }
             }
         }

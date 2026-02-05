@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -82,117 +83,121 @@ fun CreateFacilityDetailsScreen(
         ),
         contentAlignment = Alignment.Center
     ) {
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.Transparent.copy(alpha = 0.35f)
-            ),
-            border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    text = "Title",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("e.g., Pickleball Court") }
-                )
-                Text(
-                    text = "Description",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("e.g., Description ...") }
-                )
-                TextField(
-                    value = openingTime,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = {Text("Opening Time")},
-                    trailingIcon = {
-                        IconButton(onClick = { showOpeningTimePicker = !showOpeningTimePicker }) {
-                            Icon(Icons.Default.AccessTime, contentDescription = "")
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                AnimatedVisibility(
-                    visible = showOpeningTimePicker,
-                    modifier = Modifier.fillMaxWidth()
+        LazyColumn {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Transparent.copy(alpha = 0.35f)
+                    ),
+                    border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        TimeInput(
-                            modifier = Modifier
-                                .padding(top = 8.dp),
-                            state = openingTimePickerState,
+                        Text(
+                            text = "Title",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
-                    }
-                }
-                TextField(
-                    value = closingTime,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = {Text("Closing Time")},
-                    trailingIcon = {
-                        IconButton(onClick = { showClosingTimePicker = !showClosingTimePicker }) {
-                            Icon(Icons.Default.AccessTime, contentDescription = "")
+                        TextField(
+                            value = title,
+                            onValueChange = { title = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("e.g., Pickleball Court") }
+                        )
+                        Text(
+                            text = "Description",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        TextField(
+                            value = description,
+                            onValueChange = { description = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("e.g., Description ...") }
+                        )
+                        TextField(
+                            value = openingTime,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = {Text("Opening Time")},
+                            trailingIcon = {
+                                IconButton(onClick = { showOpeningTimePicker = !showOpeningTimePicker }) {
+                                    Icon(Icons.Default.AccessTime, contentDescription = "")
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        AnimatedVisibility(
+                            visible = showOpeningTimePicker,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                TimeInput(
+                                    modifier = Modifier
+                                        .padding(top = 8.dp),
+                                    state = openingTimePickerState,
+                                )
+                            }
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                AnimatedVisibility(
-                    visible = showClosingTimePicker,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        TimeInput(
-                            modifier = Modifier
-                                .padding(top = 8.dp),
-                            state = closingTimePickerState,
+                        TextField(
+                            value = closingTime,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = {Text("Closing Time")},
+                            trailingIcon = {
+                                IconButton(onClick = { showClosingTimePicker = !showClosingTimePicker }) {
+                                    Icon(Icons.Default.AccessTime, contentDescription = "")
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
                         )
+                        AnimatedVisibility(
+                            visible = showClosingTimePicker,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                TimeInput(
+                                    modifier = Modifier
+                                        .padding(top = 8.dp),
+                                    state = closingTimePickerState,
+                                )
+                            }
+                        }
+                        Text(
+                            text = "Image Url",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        TextField(
+                            value = imageUrl,
+                            onValueChange = { imageUrl = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("Please provide a valid url") }
+                        )
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RectangleShape,
+                            onClick = { viewModel.createFacilityDetails(
+                                title = title,
+                                description = description,
+                                openingTime = convertTimeToMinutes(openingTimePickerState),
+                                closingTime = convertTimeToMinutes(closingTimePickerState),
+                                imageUrl = imageUrl
+                            ) }
+                        ) {
+                            Text("Create Facility Resource")
+                        }
                     }
-                }
-                Text(
-                    text = "Image Url",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                TextField(
-                    value = imageUrl,
-                    onValueChange = { imageUrl = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Please provide a valid url") }
-                )
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RectangleShape,
-                    onClick = { viewModel.createFacilityDetails(
-                        title = title,
-                        description = description,
-                        openingTime = convertTimeToMinutes(openingTimePickerState),
-                        closingTime = convertTimeToMinutes(closingTimePickerState),
-                        imageUrl = imageUrl
-                    ) }
-                ) {
-                    Text("Create Facility Resource")
                 }
             }
         }
