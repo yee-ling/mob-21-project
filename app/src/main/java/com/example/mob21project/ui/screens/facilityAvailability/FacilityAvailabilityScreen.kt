@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -122,7 +123,12 @@ fun FacilityAvailabilityScreen(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(facilityDetails?.title ?: "")
-                    Text(facilityDetails?.description ?: "")
+                    Text(
+                        facilityDetails?.description ?: "",
+                        maxLines = 3,
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }

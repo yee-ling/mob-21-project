@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -81,23 +82,23 @@ fun ManageActivityScreen(
                 )
             }
         )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = {Text("Search")},
-            leadingIcon = {
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "",
-                    )
-                }
-            },
-            shape = RoundedCornerShape(16.dp)
-        )
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth().padding(16.dp),
+//            value = "",
+//            onValueChange = {},
+//            placeholder = {Text("Search")},
+//            leadingIcon = {
+//                IconButton(
+//                    onClick = {}
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Default.Search,
+//                        contentDescription = "",
+//                    )
+//                }
+//            },
+//            shape = RoundedCornerShape(16.dp)
+//        )
         when(selectedTabIndex) {
             0 -> {
                 ClassList(
@@ -151,8 +152,14 @@ fun ClassList(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(classDetails.title)
-                            Text(classDetails.description)
-                            Text(classDetails.capacity.toString())
+                            Text(
+                                classDetails.description,
+                                maxLines = 3,
+                                style = MaterialTheme.typography.bodyMedium,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Text(
+                                "Capacity: ${classDetails.capacity}")
                         }
                     }
                 }
@@ -194,7 +201,12 @@ fun FacilityList(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(facilityDetails.title)
-                            Text(facilityDetails.description)
+                            Text(
+                                facilityDetails.description,
+                                maxLines = 3,
+                                style = MaterialTheme.typography.bodyMedium,
+                                overflow = TextOverflow.Ellipsis
+                            )
                             Text(
                                 "${convertMinutesToTimeString(facilityDetails.openingTime)} - ${convertMinutesToTimeString(facilityDetails.closingTime)}"
                             )
